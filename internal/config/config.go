@@ -15,9 +15,9 @@ type Config struct {
 }
 
 func Load() *Config {
-	err := godotenv.Load()
+	err := godotenv.Load(".env")
 	if err != nil {
-		log.Println("Warning: .env tidak ditemukan, gunakan environment variabel system")
+		log.Printf("Warning: .env tidak ditemukan, gunakan environment variabel system\nError: %v", err)
 	}
 
 	cfg := &Config{
