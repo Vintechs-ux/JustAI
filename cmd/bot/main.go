@@ -6,6 +6,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/Vintechs-ux/justAI/internal/ai"
+	"github.com/Vintechs-ux/justAI/internal/commands"
 	"github.com/Vintechs-ux/justAI/internal/config"
 	"github.com/Vintechs-ux/justAI/internal/discord"
 )
@@ -13,8 +15,11 @@ import (
 func main() {
 	cfg := config.Load()
 
+	aiClient := ai.NewClient(cfg.GroqAPIKey)
+	generalHandler := commands.NewGeneralHandler(aiClient)
+
 	session := discord.NewSession(cfg.DiscordToken)
-	handler := discord.NewHandler(cfg.SentinelRole, cfg.PhantomRole)
+	handler := discord.NewHandler(cfg.SentinelRole, cfg.PhantomRole, generalHandler)
 
 	session.AddHandler(handler.OnReady)
 	session.AddHandler(handler.OnMessageCreate)
